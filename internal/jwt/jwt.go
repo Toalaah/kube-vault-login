@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -68,12 +67,13 @@ func (jwt *JWT) Expired() bool {
 // https://kubernetes.io/docs/reference/config-api/client-authentication.v1/
 // The contents of the exec credential are written to `w`.
 func (jwt *JWT) ExportExecCredential(w io.Writer) error {
+
 	credential := map[string]interface{}{
 		"kind":       "ExecCredential",
-		"apiVersion": "client.authentication.k8s.io/v1beta",
+		"apiVersion": "client.authentication.k8s.io/v1beta1",
 		"spec":       struct{}{},
 		"status": map[string]string{
-			"expirationTimestamp": fmt.Sprint(jwt.Exp),
+			"expirationTimestamp": time.Unix(jwt.Exp, 0).Format(time.RFC3339),
 			"token":               jwt.token,
 		},
 	}
