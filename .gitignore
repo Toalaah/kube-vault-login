@@ -1,0 +1,3 @@
+.direnv
+/kubectl-vault_login
+dist/
