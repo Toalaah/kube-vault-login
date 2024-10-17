@@ -21,6 +21,8 @@ builds:
       - linux
       - windows
       - darwin
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.ShortCommit}} -X main.branch={{.Branch}}
 
 archives:
   - format: tar.gz

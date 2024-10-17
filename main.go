@@ -3,15 +3,19 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime/debug"
+	"strconv"
 
 	"github.com/toalaah/kube-vault-login/cmd"
 	"github.com/urfave/cli/v2"
 )
 
 var (
-	version string = "dev"
-	commit  string = ""
-	app     *cli.App
+	version string
+	commit  string
+	branch  string
+
+	app *cli.App
 )
 
 func main() {
@@ -23,9 +27,9 @@ func main() {
 
 func init() {
 	app = &cli.App{
-		Name:    "kubectl-vault_login",
+		Name:    "kube-vault-login",
 		Usage:   "Authenticate to a kubernetes cluster via a vault server's OIDC role endpoint",
-		Version: buildVersion(),
+		Version: buildVersionString(),
 		Flags:   []cli.Flag{},
 		Commands: cli.Commands{
 			cmd.NewGetTokenCmd(),
@@ -34,11 +38,46 @@ func init() {
 
 }
 
-func buildVersion() string {
-	v := ""
-	v += version
-	if commit != "" {
-		v += fmt.Sprintf(" (%s)", commit)
+func buildVersionString() string {
+	dirty := false
+	v := version
+	dbg, ok := debug.ReadBuildInfo()
+
+	// Set version only if it was not set via ldflags
+	if v == "" && ok {
+		v = dbg.Main.Version
 	}
+	// Fallback to unknown default version identifier if ldflags not set or we are in debug context.
+	if v == "" || v == "(devel)" {
+		v = "dev"
+	}
+
+	// Try to read some vcs info from debug build
+	if commit == "" && ok {
+		for _, setting := range dbg.Settings {
+			switch setting.Key {
+			case "vcs.revision":
+				commit = setting.Value[:7]
+			case "vcs.modified":
+				if val, err := strconv.ParseBool(setting.Value); err == nil {
+					dirty = val
+				}
+			}
+		}
+	}
+
+	if dirty {
+		v += "-dirty"
+	}
+
+	if commit != "" {
+		switch branch {
+		case "":
+			v = fmt.Sprintf("%s (%s)", v, commit)
+		default:
+			v = fmt.Sprintf("%s (%s %s)", v, commit, branch)
+		}
+	}
+
 	return v
 }

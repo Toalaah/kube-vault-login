@@ -1,3 +1,4 @@
 .direnv
 /kubectl-vault_login
+/kube-vault-login
 dist/
