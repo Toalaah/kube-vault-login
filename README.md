@@ -7,7 +7,7 @@ backend](https://developer.hashicorp.com/vault/api-docs/secret/identity/tokens).
 
 ## Installation
 
-You can grab pre-build binaries from this project's release.
+You can grab prebuilt binaries from this project's release.
 
 > [!NOTE]
 > If you choose to manually install, e.g. via `go install`, you will need to
