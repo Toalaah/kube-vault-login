@@ -5,16 +5,14 @@ go 1.21
 toolchain go1.21.11
 
 require (
-	github.com/adrg/xdg v0.5.0
+	github.com/adrg/xdg v0.5.2
 	github.com/hashicorp/vault/api v1.15.0
 	github.com/urfave/cli/v2 v2.27.5
 )
 
 require (
-	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
-	github.com/go-jose/go-jose/v3 v3.0.3 // indirect
 	github.com/go-jose/go-jose/v4 v4.0.4 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
